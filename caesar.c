@@ -2,8 +2,8 @@
 #include<string.h>
 #include<ctype.h>
 #define MAXSIZE 1000
-char cipher(char c, int direction, int shift);
-void main(){
+extern char cipher(char c, int direction, int shift);
+void main(void){
     char input[1000];//input string
     int dir;//direction of shift
     int size;//size of shift
@@ -28,7 +28,7 @@ void main(){
             break;
         }
         printf("Enter a string: \n");
-        scanf("%s", input);
+        scanf(" %[^\n]s", input);
         printf("Encrypt (1) or Decrypt(2)\n");
         scanf("%d", &dir);
         printf("Shift:\n");
@@ -41,6 +41,7 @@ void main(){
         printf("%s\n", input);
    }
 }
+/*
 char cipher(char c, int direction, int shift){
     int newshift = shift % 26;
     int initialshiftforward = c + newshift;
@@ -48,7 +49,7 @@ char cipher(char c, int direction, int shift){
     int wraparoundgreater = initialshiftforward % 122;
     int wraparoundless = 97 % initialshiftbackward;
     int scaleforward = wraparoundgreater + 96;
-    int scalebackward = wraparoundless + 96;
+    int scalebackward = 123 - wraparoundless;
     if (direction == 1){//encryption
         if ( initialshiftforward > 122){
         c = scaleforward;
@@ -61,11 +62,10 @@ char cipher(char c, int direction, int shift){
     else{//decryption
         if ( initialshiftbackward < 97){
           c = scalebackward;
-          printf("In here %d\n",c);
         }
         else{
             c = initialshiftbackward;
         }
     }
     return c;
-}
+}*/
