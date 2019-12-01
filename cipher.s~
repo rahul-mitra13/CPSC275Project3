@@ -6,6 +6,7 @@
 	 .type cipher, @function
 
 cipher:
+        #function overhead
 	pushl	%ebp
 	movl	%esp, %ebp
 	andl	$-16, %esp

@@ -43,6 +43,7 @@ void main(void){
         if ( choice == 'N'){
             break;
         }
+        //do the same stuff as above
         printf("Enter a string: \n");
         scanf(" %[^\n]s", input);
         printf("Encrypt (1) or Decrypt(2)\n");
