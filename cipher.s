@@ -1,8 +1,6 @@
 #Rahul Mitra
-#CPSC 275, Project 2
+#CPSC 275, Project 3
 	.file	"cipher.s"
-.LC0:
-	.string	"This is the remainder %d\n"
 
 	.globl	cipher
 	 .type cipher, @function
@@ -14,8 +12,9 @@ cipher:
 	subl	$32, %esp
 	
 	
-	movl $26, 24(%esp)
-	movl $122, 20(%esp)
+	movl $26, 24(%esp) #to handle wraparound when shift size is > 26
+	movl $122, 20(%esp) #to handle when shifted distance is > 122
+	movl $97, %ecx # to handle when shifted distance is < 97 
 	
 	
 	movl 8(%ebp), %ebx #character in %ebx
@@ -24,7 +23,7 @@ cipher:
 	
 	cmpl $1, %esi
 	je   .ENCRYPT #go to encrypt if it is equal to one
-	#jne  .DECRYPT #go to decrypt if it is not equal to one
+	jne  .DECRYPT #go to decrypt if it is not equal to one
 	
 .ENCRYPT: 
         movl  %edi, %edx
@@ -32,20 +31,41 @@ cipher:
         sarl  $31, %edx
         idivl 24(%esp)
         #now, the remainder is in %edx
-        addl  %ebx, %edx #%edx is now initialshiftforward
-        cmpl $122, %edx
+        addl  %ebx, %edx #%edx is now stores the new character without handling wrap around
+        cmpl $122, %edx # if the value in %edx is greater than 122, need to account for wrap around
         jg   .WRAPAROUND_GREATER
         movl  %edx, %eax
         jmp   .DONE
         
-.WRAPAROUND_GREATER:        
+.WRAPAROUND_GREATER:   #accounting for wrap around     
         movl  %edx, %eax
         sarl  $31, %edx
         idivl 20(%esp)
         #%edx should now be wraparoundgreater
 	addl  $96, %edx
 	movl  %edx, %eax
+	jmp   .DONE
 	
-	
+.DECRYPT:
+        movl  %edi, %edx
+        movl  %edx, %eax
+        sarl  $31, %edx
+        idivl 24(%esp)
+        subl  %edx,%ebx #%ebx is now stores the new character without handling wrap around
+        cmpl  $97, %ebx #if the value in %ebx is less than 97 need to account for wrapping around
+        jl    .WRAPAROUND_LESS
+        movl  %ebx, %eax
+        jmp   .DONE
+     
+.WRAPAROUND_LESS: #accounting for wrapping around
+        movl  %ecx, %edx
+        movl  %edx, %eax
+        sarl  $31, %edx
+        idivl %ebx
+        movl  $123, %ecx
+        subl  %edx, %ecx
+        movl  %ecx, %eax
+        jmp   .DONE
+        
 .DONE: 	leave 
 	ret
