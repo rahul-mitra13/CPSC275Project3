@@ -1,6 +1,5 @@
 /*
 *Rahul Mitra
-*CPSC 275, Project 3
 */
 /*Included libraries*/
 #include<stdio.h>

@@ -1,5 +1,5 @@
 #Rahul Mitra
-#CPSC 275, Project 3
+#caesar cipher code in Assembly
 	.file	"cipher.s"
 
 	.globl	cipher
